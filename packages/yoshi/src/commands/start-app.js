@@ -35,6 +35,7 @@ const { PORT } = require('../constants');
 const {
   createClientWebpackConfig,
   createServerWebpackConfig,
+  createWebWorkerWebpackConfig,
 } = require('../../config/webpack.config');
 const {
   createCompiler,
@@ -97,8 +98,20 @@ module.exports = async () => {
     hmrPort,
   });
 
+  let webWorkerConfig;
+
+  if (!!project.webWorkerEntry) {
+    webWorkerConfig = createWebWorkerWebpackConfig({
+      isDebug: true,
+    });
+  }
+
   // Configure compilation
-  const multiCompiler = createCompiler([clientConfig, serverConfig], { https });
+  const multiCompiler = createCompiler(
+    [clientConfig, serverConfig].concat(webWorkerConfig),
+    { https },
+  );
+
   const compilationPromise = waitForCompilation(multiCompiler);
 
   const [clientCompiler, serverCompiler] = multiCompiler.compilers;

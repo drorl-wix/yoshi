@@ -77,6 +77,7 @@ const loadConfig = ({ validate, useCache } = { validate: false }) => {
       },
     },
     entry: getConfig('entry'),
+    webWorkerEntry: getConfig('webWorkerEntry'),
     splitChunks: getConfig('splitChunks', false),
     defaultEntry: './client',
     separateCss: getConfig('separateCss', true),

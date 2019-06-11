@@ -19,8 +19,12 @@ const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 const {
   createClientWebpackConfig,
   createServerWebpackConfig,
+  createWebWorkerWebpackConfig,
 } = require('../../config/webpack.config');
-const { inTeamCity: checkInTeamCity } = require('yoshi-helpers/queries');
+const {
+  inTeamCity: checkInTeamCity,
+  hasWebWorkerEntry,
+} = require('yoshi-helpers/queries');
 const { getProjectArtifactVersion } = require('yoshi-helpers/utils');
 const {
   ROOT_DIR,
@@ -36,6 +40,7 @@ const {
   petriSpecsConfig,
   clientProjectName,
   clientFilesPath,
+  webWorkerEntry,
 } = require('yoshi-config');
 const wixDepCheck = require('../tasks/dep-check');
 
@@ -127,15 +132,27 @@ module.exports = async () => {
     isDebug: true,
   });
 
+  let webWorkerConfig;
+
+  if (!!webWorkerEntry) {
+    webWorkerConfig = createWebWorkerWebpackConfig({
+      isDebug: true,
+    });
+
+    // TODO: webWorkerOptimizeConfig = createWebWorkerWebpackConfig({
+    //   isDebug: false,
+    // });
+  }
+
   let webpackStats;
   let messages;
 
   try {
-    const compiler = webpack([
-      clientDebugConfig,
-      clientOptimizedConfig,
-      serverConfig,
-    ]);
+    const compiler = webpack(
+      [clientDebugConfig, clientOptimizedConfig, serverConfig].concat(
+        webWorkerConfig,
+      ),
+    );
 
     webpackStats = await new Promise((resolve, reject) => {
       compiler.run((err, stats) => (err ? reject(err) : resolve(stats)));

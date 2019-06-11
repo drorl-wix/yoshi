@@ -941,9 +941,18 @@ function createServerWebpackConfig({
   return serverConfig;
 }
 
+//
+// Configuration for the web-sorker bundle
+// -----------------------------------------------------------------------------
+function createWebWorkerWebpackConfig({ isDebug = true }) {
+  // const config = createCommonWebpackConfig({ isDebug });
+  // TODO:
+}
+
 module.exports = {
   createCommonWebpackConfig,
   createClientWebpackConfig,
   createServerWebpackConfig,
+  createWebWorkerWebpackConfig,
   getStyleLoaders,
 };
