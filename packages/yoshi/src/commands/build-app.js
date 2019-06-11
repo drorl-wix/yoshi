@@ -21,10 +21,7 @@ const {
   createServerWebpackConfig,
   createWebWorkerWebpackConfig,
 } = require('../../config/webpack.config');
-const {
-  inTeamCity: checkInTeamCity,
-  hasWebWorkerEntry,
-} = require('yoshi-helpers/queries');
+const { inTeamCity: checkInTeamCity } = require('yoshi-helpers/queries');
 const { getProjectArtifactVersion } = require('yoshi-helpers/utils');
 const {
   ROOT_DIR,
