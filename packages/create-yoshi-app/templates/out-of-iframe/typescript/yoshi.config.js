@@ -25,8 +25,10 @@ module.exports = {
     settingsPanel: './settingsPanel/settingsPanel.tsx',
     editorApp: './editorApp/editorApp.tsx',
     viewerWidget: './viewerApp/viewerWidget.tsx',
-    viewerScript: './viewerApp/viewerScript.ts',
     'wix-private-mock': '../dev/wix-private.mock.js',
+  },
+  webWorkerEntry: {
+    viewerScript: './viewerApp/viewerScript.ts',
   },
   servers: {
     cdn: {
