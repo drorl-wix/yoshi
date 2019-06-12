@@ -115,7 +115,11 @@ module.exports = async () => {
 
   const compilationPromise = waitForCompilation(multiCompiler);
 
-  const [clientCompiler, serverCompiler] = multiCompiler.compilers;
+  const [
+    clientCompiler,
+    serverCompiler,
+    webWorkerCompiler,
+  ] = multiCompiler.compilers;
 
   // Start up server process
   const serverProcess = new ServerProcess({
@@ -130,6 +134,8 @@ module.exports = async () => {
     https,
     host,
   });
+
+  webWorkerCompiler.watch({ 'info-verbosity': 'none' }, () => {});
 
   serverCompiler.watch({ 'info-verbosity': 'none' }, async (error, stats) => {
     // We save the result of this build to webpack-dev-server's internal state so the last

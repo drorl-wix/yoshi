@@ -988,6 +988,44 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
       // https://webpack.js.org/plugins/split-chunks-plugin
       splitChunks: useSplitChunks ? splitChunksConfig : false,
     },
+
+    output: {
+      ...config.output,
+
+      // Bundle as UMD format if the user configured that this is a library
+      ...(project.exports
+        ? {
+            library: project.exports,
+            libraryTarget: 'umd',
+            globalObject: 'self',
+          }
+        : {}),
+
+      // https://webpack.js.org/configuration/output/#output-umdnameddefine
+      umdNamedDefine: project.umdNamedDefine,
+    },
+
+    externals: project.externals,
+
+    plugins: [
+      ...config.plugins,
+      // https://webpack.js.org/plugins/define-plugin/
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(
+          isProduction ? 'production' : 'development',
+        ),
+        'process.env.IS_MINIFIED': isDebug ? 'false' : 'true',
+        'window.__CI_APP_VERSION__': JSON.stringify(
+          artifactVersion ? artifactVersion : '0.0.0',
+        ),
+        'process.env.ARTIFACT_ID': JSON.stringify(getProjectArtifactId()),
+      }),
+
+      // https://webpack.js.org/plugins/loader-options-plugin
+      new webpack.LoaderOptionsPlugin({
+        minimize: !isDebug,
+      }),
+    ],
   };
 
   return webWorkerConfig;
