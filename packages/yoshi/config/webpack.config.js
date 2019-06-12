@@ -130,6 +130,8 @@ const splitChunksConfig = isObject(useSplitChunks)
 
 const entry = project.entry || project.defaultEntry;
 
+const webWorkerEntry = project.webWorkerEntry;
+
 const possibleServerEntries = ['./server', '../dev/server'];
 
 // Common function to get style loaders
@@ -944,9 +946,51 @@ function createServerWebpackConfig({
 //
 // Configuration for the web-sorker bundle
 // -----------------------------------------------------------------------------
-function createWebWorkerWebpackConfig({ isDebug = true }) {
-  // const config = createCommonWebpackConfig({ isDebug });
-  // TODO:
+function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
+  const config = createCommonWebpackConfig({ isDebug, isHmr });
+
+  const webWorkerConfig = {
+    ...config,
+
+    name: 'web-worker',
+
+    target: 'webworker',
+
+    entry: isSingleEntry(webWorkerEntry)
+      ? { app: webWorkerEntry }
+      : webWorkerEntry,
+
+    optimization: {
+      minimize: !isDebug,
+      // https://webpack.js.org/plugins/module-concatenation-plugin
+      concatenateModules: isProduction && !disableModuleConcat,
+      minimizer: [
+        new TerserPlugin({
+          // Use multi-process parallel running to improve the build speed
+          // Default number of concurrent runs: os.cpus().length - 1
+          parallel: true,
+          // Enable file caching
+          cache: true,
+          sourceMap: true,
+          terserOptions: {
+            output: {
+              // support emojis
+              ascii_only: true,
+            },
+            keep_fnames: project.keepFunctionNames,
+          },
+        }),
+
+        // https://github.com/NMFR/optimize-css-assets-webpack-plugin
+        new OptimizeCSSAssetsPlugin(),
+      ],
+
+      // https://webpack.js.org/plugins/split-chunks-plugin
+      splitChunks: useSplitChunks ? splitChunksConfig : false,
+    },
+  };
+
+  return webWorkerConfig;
 }
 
 module.exports = {

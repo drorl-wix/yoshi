@@ -130,15 +130,16 @@ module.exports = async () => {
   });
 
   let webWorkerConfig;
+  let webWorkerOptimizeConfig;
 
   if (!!webWorkerEntry) {
     webWorkerConfig = createWebWorkerWebpackConfig({
       isDebug: true,
     });
 
-    // TODO: webWorkerOptimizeConfig = createWebWorkerWebpackConfig({
-    //   isDebug: false,
-    // });
+    webWorkerOptimizeConfig = createWebWorkerWebpackConfig({
+      isDebug: false,
+    });
   }
 
   let webpackStats;
@@ -146,9 +147,13 @@ module.exports = async () => {
 
   try {
     const compiler = webpack(
-      [clientDebugConfig, clientOptimizedConfig, serverConfig].concat(
+      [
+        clientDebugConfig,
+        clientOptimizedConfig,
+        serverConfig,
         webWorkerConfig,
-      ),
+        webWorkerOptimizeConfig,
+      ].filter(Boolean),
     );
 
     webpackStats = await new Promise((resolve, reject) => {
