@@ -944,7 +944,7 @@ function createServerWebpackConfig({
 }
 
 //
-// Configuration for the web-sorker bundle
+// Configuration for the web-worker bundle
 // -----------------------------------------------------------------------------
 function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
   const config = createCommonWebpackConfig({ isDebug, isHmr });
