@@ -49,6 +49,7 @@ const schema = {
       type: 'boolean',
     },
     entry: webpackOptions.properties.entry,
+    webWorkerEntry: webpackOptions.properties.entry,
     servers: {
       type: 'object',
       additionalProperties: false,
