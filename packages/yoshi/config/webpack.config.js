@@ -109,6 +109,23 @@ function prependNameWith(filename, prefix) {
   return filename.replace(/\.[0-9a-z]+$/i, match => `.${prefix}${match}`);
 }
 
+function createTerserPlugin() {
+  return new TerserPlugin({
+    // Use multi-process parallel running to improve the build speed
+    // Default number of concurrent runs: os.cpus().length - 1
+    parallel: true,
+    // Enable file caching
+    cache: true,
+    sourceMap: true,
+    terserOptions: {
+      output: {
+        // support emojis
+        ascii_only: true,
+      },
+      keep_fnames: project.keepFunctionNames,
+    },
+  });
+}
 // NOTE ABOUT PUBLIC PATH USING UNPKG SERVICE
 // Projects that uses `wnpm-ci` have their package.json version field on a fixed version which is not their real version
 // These projects determine their version on the "release" step, which means they will have a wrong public path
@@ -327,6 +344,17 @@ function createCommonWebpackConfig({
     },
 
     plugins: [
+      // https://webpack.js.org/plugins/define-plugin/
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(
+          isProduction ? 'production' : 'development',
+        ),
+        'process.env.IS_MINIFIED': isDebug ? 'false' : 'true',
+        'window.__CI_APP_VERSION__': JSON.stringify(
+          artifactVersion ? artifactVersion : '0.0.0',
+        ),
+        'process.env.ARTIFACT_ID': JSON.stringify(getProjectArtifactId()),
+      }),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource
       new ModuleNotFoundPlugin(ROOT_DIR),
@@ -592,22 +620,7 @@ function createClientWebpackConfig({
       // https://webpack.js.org/plugins/module-concatenation-plugin
       concatenateModules: isProduction && !disableModuleConcat,
       minimizer: [
-        new TerserPlugin({
-          // Use multi-process parallel running to improve the build speed
-          // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true,
-          // Enable file caching
-          cache: true,
-          sourceMap: true,
-          terserOptions: {
-            output: {
-              // support emojis
-              ascii_only: true,
-            },
-            keep_fnames: project.keepFunctionNames,
-          },
-        }),
-
+        createTerserPlugin(),
         // https://github.com/NMFR/optimize-css-assets-webpack-plugin
         new OptimizeCSSAssetsPlugin(),
       ],
@@ -719,18 +732,6 @@ function createClientWebpackConfig({
               : []),
           ]
         : []),
-
-      // https://webpack.js.org/plugins/define-plugin/
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(
-          isProduction ? 'production' : 'development',
-        ),
-        'process.env.IS_MINIFIED': isDebug ? 'false' : 'true',
-        'window.__CI_APP_VERSION__': JSON.stringify(
-          artifactVersion ? artifactVersion : '0.0.0',
-        ),
-        'process.env.ARTIFACT_ID': JSON.stringify(getProjectArtifactId()),
-      }),
 
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -964,26 +965,7 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
       minimize: !isDebug,
       // https://webpack.js.org/plugins/module-concatenation-plugin
       concatenateModules: isProduction && !disableModuleConcat,
-      minimizer: [
-        new TerserPlugin({
-          // Use multi-process parallel running to improve the build speed
-          // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true,
-          // Enable file caching
-          cache: true,
-          sourceMap: true,
-          terserOptions: {
-            output: {
-              // support emojis
-              ascii_only: true,
-            },
-            keep_fnames: project.keepFunctionNames,
-          },
-        }),
-
-        // https://github.com/NMFR/optimize-css-assets-webpack-plugin
-        new OptimizeCSSAssetsPlugin(),
-      ],
+      minimizer: [createTerserPlugin()],
 
       // https://webpack.js.org/plugins/split-chunks-plugin
       splitChunks: useSplitChunks ? splitChunksConfig : false,
@@ -992,40 +974,14 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
     output: {
       ...config.output,
 
-      // Bundle as UMD format if the user configured that this is a library
-      ...(project.exports
-        ? {
-            library: project.exports,
-            libraryTarget: 'umd',
-            globalObject: 'self',
-          }
-        : {}),
-
-      // https://webpack.js.org/configuration/output/#output-umdnameddefine
-      umdNamedDefine: project.umdNamedDefine,
+      // Bundle as UMD format
+      library: project.exports,
+      libraryTarget: 'umd',
+      globalObject: 'self',
     },
 
-    externals: project.externals,
-
-    plugins: [
-      ...config.plugins,
-      // https://webpack.js.org/plugins/define-plugin/
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(
-          isProduction ? 'production' : 'development',
-        ),
-        'process.env.IS_MINIFIED': isDebug ? 'false' : 'true',
-        'window.__CI_APP_VERSION__': JSON.stringify(
-          artifactVersion ? artifactVersion : '0.0.0',
-        ),
-        'process.env.ARTIFACT_ID': JSON.stringify(getProjectArtifactId()),
-      }),
-
-      // https://webpack.js.org/plugins/loader-options-plugin
-      new webpack.LoaderOptionsPlugin({
-        minimize: !isDebug,
-      }),
-    ],
+    // TODO - figure out if we need webWorkerExternals
+    // externals: project.webWorkerExternals,
   };
 
   return webWorkerConfig;
