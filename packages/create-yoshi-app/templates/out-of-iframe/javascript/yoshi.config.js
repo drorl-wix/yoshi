@@ -27,8 +27,17 @@ module.exports = {
     viewerWidget: './viewerApp/viewerWidget.js',
     'wix-private-mock': '../dev/wix-private.mock.js',
   },
-  webWorkerEntry: {
-    viewerScript: './viewerApp/viewerScript.js',
+  webWorker: {
+    entry: {
+      viewerScript: './viewerApp/viewerScript.js',
+    },
+    externals: {
+      lodash: {
+        commonjs: 'lodash',
+        amd: 'lodash',
+        root: '_',
+      },
+    },
   },
   servers: {
     cdn: {

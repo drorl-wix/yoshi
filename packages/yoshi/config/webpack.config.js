@@ -980,8 +980,7 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
       globalObject: 'self',
     },
 
-    // TODO - figure out if we need webWorkerExternals
-    // externals: project.webWorkerExternals,
+    externals: project.webWorkerExternals,
   };
 
   return webWorkerConfig;
