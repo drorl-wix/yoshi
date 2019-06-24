@@ -958,7 +958,7 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
     target: 'webworker',
 
     entry: isSingleEntry(webWorkerEntry)
-      ? { app: webWorkerEntry }
+      ? { worker: webWorkerEntry }
       : webWorkerEntry,
 
     optimization: {
@@ -975,12 +975,12 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
       ...config.output,
 
       // Bundle as UMD format
-      library: project.exports,
+      library: '[name]',
       libraryTarget: 'umd',
       globalObject: 'self',
     },
 
-    externals: project.webWorkerExternals,
+    externals: [project.webWorkerExternals].filter(Boolean),
   };
 
   return webWorkerConfig;
