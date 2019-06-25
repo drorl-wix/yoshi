@@ -4,7 +4,7 @@ describe('web-worker', () => {
   it('creates a web worker bundle on the page', async () => {
     const logged = new Promise(resolve => {
       page.on('console', msg => {
-        if (msg.type() === 'info') {
+        if (msg.type() === 'log') {
           resolve(msg.text());
         }
       });
@@ -24,7 +24,7 @@ describe('web-worker', () => {
       });
     });
 
-    await initTest('web-worker-with-externals');
+    await initTest('web-worker');
 
     expect(await logged).toBe('Some external text');
   });

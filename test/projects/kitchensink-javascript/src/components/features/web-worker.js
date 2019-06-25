@@ -6,6 +6,6 @@ export default class WebWorker extends React.Component {
   }
 
   render() {
-    return <h1>Test Worker</h1>;
+    return <h1>Test Web Worker</h1>;
   }
 }

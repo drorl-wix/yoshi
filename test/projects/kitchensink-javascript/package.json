@@ -45,8 +45,7 @@
     },
     "webWorker": {
       "entry": {
-        "worker": "./worker",
-        "worker-with-externals": "./worker-with-externals"
+        "worker": "./worker"
       },
       "externals": {
         "worker-externals": "worker-externals"

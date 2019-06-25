@@ -8,17 +8,13 @@ app.get('/other', async (req, res) => {
   res.send(await ejs.renderFile('./src/other.ejs'));
 });
 
-app.get('/web-worker.js', (req, res) => {
+app.get('/web-worker-bundle.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'statics/worker.bundle.js'));
 });
 
-app.get('/web-worker-with-externals-bundle.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'statics/worker-with-externals.bundle.js'));
-});
-
-app.get('/web-worker-with-externals.js', async (req, res) => {
+app.get('/web-worker.js', async (req, res) => {
   res.send(
-    `self['worker-externals'] = 'Some external text';\n importScripts("/web-worker-with-externals-bundle.js")`,
+    `self['worker-externals'] = 'Some external text';\n importScripts("/web-worker-bundle.js")`,
   );
 });
 
