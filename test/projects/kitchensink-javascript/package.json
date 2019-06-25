@@ -45,7 +45,11 @@
     },
     "webWorker": {
       "entry": {
-        "worker": "./worker"
+        "worker": "./worker",
+        "worker-with-externals": "./worker-with-externals"
+      },
+      "externals": {
+        "worker-externals": "worker-externals"
       }
     },
     "hmr": "auto"

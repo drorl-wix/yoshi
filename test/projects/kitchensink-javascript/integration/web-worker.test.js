@@ -15,7 +15,22 @@ describe('web-worker', () => {
     expect(await logged).toBe('hello from a web worker');
   });
 
-  it('supports externals for web-worker', async () => {});
+  it('supports externals for web-worker', async () => {
+    const logged = new Promise(resolve => {
+      page.on('console', msg => {
+        if (msg.type() === 'info') {
+          resolve(msg.text());
+        }
+      });
+    });
+
+    await initTest('web-worker-with-externals');
+
+    expect(await logged).toBe('Some external text');
+  });
+
+  // jest.setTimeout(999990);
+  // await jestPuppeteer.debug();
 
   // it('refresh the browser after a change in the web-worker has occured', async () => {
   // TODO
