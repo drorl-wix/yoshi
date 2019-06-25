@@ -45,6 +45,7 @@ const {
   getProjectArtifactId,
   createBabelConfig,
 } = require('yoshi-helpers/utils');
+const { defaultEntry } = require('yoshi-helpers/constants');
 const { addEntry, overrideRules } = require('../src/webpack-utils');
 
 const reScript = /\.js?$/;
@@ -128,7 +129,7 @@ const splitChunksConfig = isObject(useSplitChunks)
   ? useSplitChunks
   : defaultSplitChunksConfig;
 
-const entry = project.entry || project.defaultEntry;
+const entry = project.entry || defaultEntry;
 
 const possibleServerEntries = ['./server', '../dev/server'];
 

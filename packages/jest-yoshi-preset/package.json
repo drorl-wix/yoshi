@@ -16,6 +16,7 @@
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "jest": "^24.1.0",
+    "puppeteer": "^1.18.0",
     "yoshi": "^4.1.0"
   },
   "dependencies": {
