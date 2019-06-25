@@ -137,7 +137,26 @@ module.exports = async () => {
   });
 
   if (isWebWorkerBundle) {
-    webWorkerCompiler.watch({ 'info-verbosity': 'none' }, () => {});
+    webWorkerCompiler.watch(
+      { 'info-verbosity': 'none' },
+      async (error, stats) => {
+        const jsonStats = stats.toJson();
+
+        if (!error && !stats.hasErrors()) {
+          // Send the browser an instruction to refresh
+          await devServer.send('hash', jsonStats.hash);
+          await devServer.send('ok');
+        } else {
+          // If there are errors, show them on the browser
+          // TODO - verify it works and test it
+          if (jsonStats.errors.length > 0) {
+            await devServer.send('errors', jsonStats.errors);
+          } else if (jsonStats.warnings.length > 0) {
+            await devServer.send('warnings', jsonStats.warnings);
+          }
+        }
+      },
+    );
   }
 
   serverCompiler.watch({ 'info-verbosity': 'none' }, async (error, stats) => {

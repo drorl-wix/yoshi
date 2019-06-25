@@ -7,7 +7,7 @@ describe('web-worker', () => {
   beforeAll(async () => {
     log = new Promise(resolve => {
       page.on('console', msg => {
-        if (msg.type() === 'log') {
+        if (msg.type() === 'warning') {
           resolve(msg.text());
         }
       });
@@ -15,7 +15,7 @@ describe('web-worker', () => {
 
     info = new Promise(resolve => {
       page.on('console', msg => {
-        if (msg.type() === 'info') {
+        if (msg.type() === 'error') {
           resolve(msg.text());
         }
       });
