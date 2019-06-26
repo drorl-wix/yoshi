@@ -957,9 +957,7 @@ function createWebWorkerWebpackConfig({ isDebug = true, isHmr = false }) {
 
     target: 'webworker',
 
-    entry: isSingleEntry(webWorkerEntry)
-      ? { worker: webWorkerEntry }
-      : webWorkerEntry,
+    entry: webWorkerEntry,
 
     optimization: {
       minimize: !isDebug,

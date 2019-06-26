@@ -155,7 +155,6 @@ module.exports = async () => {
           await devServer.send('ok');
         } else {
           // If there are errors, show them on the browser
-          // TODO - verify it works and test it
           if (jsonStats.errors.length > 0) {
             await devServer.send('errors', jsonStats.errors);
           } else if (jsonStats.warnings.length > 0) {
