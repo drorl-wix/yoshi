@@ -98,7 +98,7 @@ describe('hmr', () => {
     });
   });
 
-  describe('worker side', () => {
+  describe('web worker side', () => {
     it('refresh the browser after changes in the web-worker', async () => {
       const originalLog = 'hello from a web worker';
       const overriddenLog = 'hello from the other side';
@@ -143,11 +143,9 @@ describe('hmr', () => {
     });
 
     // it('shows error overlay on the browser', async () => {
-    //   await initTest('web-worker');
-
-    //   fs.writeFileSync(workerFilePath, '>>>error');
-
-    //   // await page.waitForSelector('#webpack-dev-server-client-overlay');
+    // await initTest('web-worker');
+    // fs.writeFileSync(workerFilePath, '>>>error');
+    // await page.waitForSelector('#webpack-dev-server-client-overlay');
     // });
   });
 });

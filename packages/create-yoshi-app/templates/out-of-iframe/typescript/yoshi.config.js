@@ -2,8 +2,6 @@ const { editorUrl, viewerUrl } = require('./dev/sites');
 
 module.exports = {
   projectType: 'app',
-  liveReload: false,
-  hmr: false,
   startUrl: [editorUrl, viewerUrl],
   externals: {
     react: {
