@@ -140,6 +140,13 @@ module.exports = async () => {
     webWorkerCompiler.watch(
       { 'info-verbosity': 'none' },
       async (error, stats) => {
+        // We save the result of this build to webpack-dev-server's internal state so the last
+        // worker build results are sent to the browser on every refresh.
+        // It also affects the error overlay
+        //
+        // https://github.com/webpack/webpack-dev-server/blob/143762596682d8da4fdc73555880be05255734d7/lib/Server.js#L722
+        devServer._stats = stats;
+
         const jsonStats = stats.toJson();
 
         if (!error && !stats.hasErrors()) {
@@ -161,9 +168,10 @@ module.exports = async () => {
 
   serverCompiler.watch({ 'info-verbosity': 'none' }, async (error, stats) => {
     // We save the result of this build to webpack-dev-server's internal state so the last
-    // server build results are sent to the browser on every refresh
+    // server build results are sent to the browser on every refresh.
+    // It also affects the error overlay
     //
-    // https://github.com/webpack/webpack-dev-server/blob/master/lib/Server.js#L144
+    // https://github.com/webpack/webpack-dev-server/blob/143762596682d8da4fdc73555880be05255734d7/lib/Server.js#L722
     devServer._stats = stats;
 
     const jsonStats = stats.toJson();
