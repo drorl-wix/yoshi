@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { LaunchOptions } from 'puppeteer';
 
 type BootstrapSetupOptions = {

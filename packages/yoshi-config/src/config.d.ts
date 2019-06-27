@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Entry, EntryFunc, ExternalsElement, Options } from 'webpack';
 import { Config as JestConfig } from '@jest/types';
 
