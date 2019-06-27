@@ -6,5 +6,8 @@ module.exports = {
     '/node_modules/',
     '/test/',
   ],
-  preset: 'ts-jest',
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+  },
 };
