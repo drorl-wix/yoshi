@@ -8,7 +8,8 @@ const validConfig: InitialConfig = {
   //
   // @ts-ignore
   separateCss: multipleValidOptions(true, 'prod'),
-  splitChunks: false,
+  // @ts-ignore
+  splitChunks: multipleValidOptions({}, false),
   cssModules: true,
   tpaStyle: false,
   enhancedTpaStyle: false,
@@ -18,7 +19,7 @@ const validConfig: InitialConfig = {
   clientProjectName: 'project',
   keepFunctionNames: false,
   // @ts-ignore
-  entry: multipleValidOptions('index.js', ['one.js', 'two.js'], {
+  entry: multipleValidOptions('index.js', ['one.js', { two: 'two.js' }], {
     app: 'index.js',
   }),
   servers: {
@@ -45,7 +46,8 @@ const validConfig: InitialConfig = {
   // @ts-ignore
   hmr: multipleValidOptions(true, 'auto'),
   liveReload: false,
-  performance: false,
+  // @ts-ignore
+  performance: multipleValidOptions({}, false),
   hooks: {
     prelint: 'npm run stuff',
   },

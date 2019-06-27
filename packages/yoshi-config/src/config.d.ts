@@ -31,7 +31,7 @@ type featuresConfig = {
 export type InitialConfig = {
   extends?: string;
   separateCss?: boolean | 'prod';
-  splitChunks?: boolean;
+  splitChunks?: Options.SplitChunksOptions | false;
   cssModules?: boolean;
   tpaStyle?: boolean;
   enhancedTpaStyle?: boolean;
@@ -78,7 +78,7 @@ export type Config = {
     cdn: Omit<CdnConfig, 'dir'>;
   };
   entry?: string | Array<string> | Entry | EntryFunc;
-  splitChunks: boolean;
+  splitChunks: Options.SplitChunksOptions | false;
   separateCss: boolean | 'prod';
   cssModules: boolean;
   tpaStyle: boolean;
