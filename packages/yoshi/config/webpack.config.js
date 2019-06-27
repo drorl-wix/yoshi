@@ -44,6 +44,7 @@ const {
   toIdentifier,
   getProjectArtifactId,
   createBabelConfig,
+  unprocessedModules,
 } = require('yoshi-helpers/utils');
 const { defaultEntry } = require('yoshi-helpers/constants');
 const { addEntry, overrideRules } = require('../src/webpack-utils');
@@ -373,7 +374,7 @@ function createCommonWebpackConfig({
               {
                 test: reScript,
                 loader: 'yoshi-angular-dependencies/ng-annotate-loader',
-                include: project.unprocessedModules,
+                include: unprocessedModules,
               },
             ]
           : []),
@@ -381,7 +382,7 @@ function createCommonWebpackConfig({
         // Rules for TS / TSX
         {
           test: /\.(ts|tsx)$/,
-          include: project.unprocessedModules,
+          include: unprocessedModules,
           use: [
             {
               loader: 'thread-loader',
@@ -425,7 +426,7 @@ function createCommonWebpackConfig({
         // Rules for JS
         {
           test: reScript,
-          include: project.unprocessedModules,
+          include: unprocessedModules,
           use: [
             {
               loader: 'thread-loader',
