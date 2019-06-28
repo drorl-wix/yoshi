@@ -6,10 +6,16 @@ import { getFrom } from './utils';
 export default (initialConfig: InitialConfig, pkgJson: PackageJson): Config => {
   const get = getFrom(initialConfig);
 
-  const { name, unpkg, dependencies = {}, devDependencies = {} } = pkgJson;
+  const {
+    name,
+    unpkg,
+    dependencies = {},
+    devDependencies = {},
+    jest = {},
+  } = pkgJson;
 
   const cdnPort = get(c => c.servers.cdn.port, 3200);
-  const cdnSsl = get(c => c.servers.cdn.ssl, true);
+  const cdnSsl = get(c => c.servers.cdn.ssl, false);
   const cdnUrl = get(
     c => c.servers.cdn.url,
     `${cdnSsl ? 'https:' : 'http:'}//localhost:${cdnPort}/`,
@@ -49,7 +55,6 @@ export default (initialConfig: InitialConfig, pkgJson: PackageJson): Config => {
     features: get(c => c.features, {}),
     externals: get(c => c.externals, []),
     transpileTests: get(c => c.transpileTests, true),
-    jestConfig: get(c => c.jest, {}),
     externalUnprocessedModules: get(c => c.externalUnprocessedModules, []),
     petriSpecsConfig: get(c => c.petriSpecs, {}),
     performanceBudget: get(c => c.performance, false),
@@ -61,6 +66,8 @@ export default (initialConfig: InitialConfig, pkgJson: PackageJson): Config => {
     experimentalMonorepo: get(c => c.experimentalMonorepo, false),
     experimentalMinimalPRBuild: get(c => c.experimentalBuildHtml, false),
     projectType: get(c => c.projectType, null),
+
+    jestConfig: jest,
 
     clientProjectName,
     clientFilesPath,

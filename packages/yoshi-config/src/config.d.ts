@@ -1,5 +1,4 @@
 import { Entry, EntryFunc, ExternalsElement, Options } from 'webpack';
-import { Config as JestConfig } from '@jest/types';
 
 type ProjectType = 'app';
 
@@ -46,7 +45,7 @@ export type InitialConfig = {
   specs?: SpecsConfig;
   petriSpecs?: PetriOptions;
   transpileTests?: boolean;
-  jest: JestConfig.InitialOptions | {};
+  jest: unknown;
   externalUnprocessedModules?: Array<string>;
   exports?: string;
   hmr?: boolean | 'auto';
@@ -86,7 +85,7 @@ export type Config = {
   features: featuresConfig;
   externals: ExternalsElement | Array<ExternalsElement>;
   transpileTests: boolean;
-  jestConfig: JestConfig.InitialOptions | {};
+  jestConfig: unknown;
   externalUnprocessedModules: Array<string>;
   petriSpecsConfig: PetriOptions;
   performanceBudget: Options.Performance | false;
