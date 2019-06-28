@@ -56,7 +56,11 @@ const validConfig: InitialConfig = {
   experimentalBuildHtml: false,
   experimentalMonorepo: false,
   experimentalMinimalPRBuild: false,
-  startUrl: 'http://localhost:3000',
+  // @ts-ignore
+  startUrl: multipleValidOptions('http://localhost:3000', [
+    'http://localhost:3000/hello',
+    'http://localhost:3000/world',
+  ]),
 };
 
 export default validConfig;

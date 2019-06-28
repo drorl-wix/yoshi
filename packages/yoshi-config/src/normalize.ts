@@ -10,7 +10,7 @@ export default (initialConfig: InitialConfig, pkgJson: PackageJson): Config => {
     name,
     unpkg,
     dependencies = {},
-    devDependencies = {},
+    peerDependencies = {},
     jest = {},
   } = pkgJson;
 
@@ -75,8 +75,8 @@ export default (initialConfig: InitialConfig, pkgJson: PackageJson): Config => {
     experimentalMonorepoSubProcess:
       process.env.EXPERIMENTAL_MONOREPO_SUB_PROCESS === 'true',
 
-    isAngularProject: !!dependencies.angular || !!devDependencies.angular,
-    isReactProject: !!dependencies.react || !!devDependencies.react,
+    isAngularProject: !!dependencies.angular || !!peerDependencies.angular,
+    isReactProject: !!dependencies.react || !!peerDependencies.react,
   };
 
   return config;
