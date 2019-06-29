@@ -1,7 +1,7 @@
 import readPkg from 'read-pkg';
 import cosmiconfig from 'cosmiconfig';
 import { defaultsDeep } from 'lodash';
-import { validate } from 'jest-validate';
+import { validate as validateConfig } from 'jest-validate';
 import { Config, InitialConfig } from './config';
 import validConfig from './validConfig';
 import normalize from './normalize';
@@ -10,7 +10,7 @@ const explorer = cosmiconfig('yoshi', {
   searchPlaces: ['package.json', 'yoshi.config.js'],
 });
 
-export default (): Config => {
+export default ({ validate = true } = {}): Config => {
   const result = explorer.searchSync();
   const initialConfig = <InitialConfig>(result ? result.config : {});
 
@@ -23,9 +23,11 @@ export default (): Config => {
   }
 
   // Validate correctness
-  validate(initialConfig, {
-    exampleConfig: validConfig,
-  });
+  if (validate) {
+    validateConfig(initialConfig, {
+      exampleConfig: validConfig,
+    });
+  }
 
   // Load package.json
   const pkgJson = readPkg.sync({ cwd: process.cwd() });
