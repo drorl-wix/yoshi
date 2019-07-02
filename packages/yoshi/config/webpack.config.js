@@ -44,7 +44,9 @@ const {
   toIdentifier,
   getProjectArtifactId,
   createBabelConfig,
+  unprocessedModules,
 } = require('yoshi-helpers/utils');
+const { defaultEntry } = require('yoshi-helpers/constants');
 const { addEntry, overrideRules } = require('../src/webpack-utils');
 
 const reScript = /\.js?$/;
@@ -145,7 +147,7 @@ const splitChunksConfig = isObject(useSplitChunks)
   ? useSplitChunks
   : defaultSplitChunksConfig;
 
-const entry = project.entry || project.defaultEntry;
+const entry = project.entry || defaultEntry;
 
 const webWorkerEntry = project.webWorkerEntry;
 
@@ -235,6 +237,7 @@ const getStyleLoaders = ({
                   // https://github.com/facebookincubator/create-react-app/issues/2677
                   ident: 'postcss',
                   plugins: [
+                    project.experimentalRtlCss && require('postcss-rtl')(),
                     require('autoprefixer')({
                       // https://github.com/browserslist/browserslist
                       overrideBrowserslist: [
@@ -246,7 +249,7 @@ const getStyleLoaders = ({
                       ].join(','),
                       flexbox: 'no-2009',
                     }),
-                  ],
+                  ].filter(Boolean),
                   sourceMap: isDebug,
                 },
               },
@@ -402,7 +405,7 @@ function createCommonWebpackConfig({
               {
                 test: reScript,
                 loader: 'yoshi-angular-dependencies/ng-annotate-loader',
-                include: project.unprocessedModules,
+                include: unprocessedModules,
               },
             ]
           : []),
@@ -410,7 +413,7 @@ function createCommonWebpackConfig({
         // Rules for TS / TSX
         {
           test: /\.(ts|tsx)$/,
-          include: project.unprocessedModules,
+          include: unprocessedModules,
           use: [
             {
               loader: 'thread-loader',
@@ -454,7 +457,7 @@ function createCommonWebpackConfig({
         // Rules for JS
         {
           test: reScript,
-          include: project.unprocessedModules,
+          include: unprocessedModules,
           use: [
             {
               loader: 'thread-loader',
@@ -723,7 +726,7 @@ function createClientWebpackConfig({
             // https://github.com/wix-incubator/tpa-style-webpack-plugin
             ...(project.enhancedTpaStyle ? [new TpaStyleWebpackPlugin()] : []),
             // https://github.com/wix/rtlcss-webpack-plugin
-            ...(!project.experimentalBuildHtml
+            ...(!project.experimentalBuildHtml && !project.experimentalRtlCss
               ? [
                   new RtlCssPlugin(
                     isDebug ? '[name].rtl.css' : '[name].rtl.min.css',
